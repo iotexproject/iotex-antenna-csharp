@@ -1,3 +1,5 @@
+using System.Text;
+using Nethereum.Hex.HexConvertors.Extensions;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -23,6 +25,30 @@ namespace IoTeX.antenna.Tests.Accounts
             Assert.Equal(
                 "io187wzp08vnhjjpkydnr97qlh8kh0dpkkytfam8j",
                 account.Address);
+        }
+
+        [Fact]
+        public void TestSign()
+        {
+            var account = antenna.Accounts.Account.FromPrivateKey("0806c458b262edd333a191e92f561aff338211ee3e18ab315a074a2d82aa343f");
+            
+            var signature = account.Sign(Encoding.ASCII.GetBytes("IoTeX is the auto-scalable and privacy-centric blockchain."));
+            
+            Assert.Equal(
+                "99f4ef1005ae6c43548520e08dd11477e9ea59317087f9c6f33bc79eb701b14b043ff0d177bc419e585c0ecae42420fabb837e602c8a3578ea17dd1a8ed862e301",
+                signature.ToHex());
+        }
+        
+        [Fact]
+        public void TestRecover()
+        {
+            var account = antenna.Accounts.Account.FromPrivateKey("0806c458b262edd333a191e92f561aff338211ee3e18ab315a074a2d82aa343f");
+            
+            var signature = account.Sign(Encoding.ASCII.GetBytes("IoTeX is the auto-scalable and privacy-centric blockchain."));
+
+            var address = account.Recover("IoTeX is the auto-scalable and privacy-centric blockchain.", signature, false);
+            
+            Assert.Equal(account.Address,address);
         }
     }
 }

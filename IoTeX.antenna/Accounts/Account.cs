@@ -3,21 +3,25 @@ using Nethereum.Hex.HexConvertors.Extensions;
 using Nethereum.Signer;
 using Nethereum.Util;
 
-namespace IoTeX.antenna.Account
+namespace IoTeX.antenna.Accounts
 {
-    public class Account
+    public class Account: IAccount
     {
         public Account(string privateKey)
         {
             Initialise(new EthECKey(privateKey));
+        }
+        
+        public static Account FromPrivateKey(string privateKey)
+        { 
+            return new Account(privateKey);
         }
 
         private void Initialise(EthECKey key)
         {
             PrivateKey = key.GetPrivateKey();
             PublicKey = key.GetPubKey().ToHex();
-            var sha3 = new Sha3Keccack();
-            Address = Bech32.Encode("io", sha3.CalculateHash(key.GetPubKey().Slice(1)).Slice(12));
+            Address = Bech32.Encode("io", Hash.Hash160B(key.GetPubKey().Slice(1)));
         }
 
         public string Address { get; private set; }

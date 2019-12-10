@@ -1,4 +1,4 @@
-namespace IoTeX.antenna.Account
+namespace IoTeX.antenna.Accounts
 {
     public interface IAccount
     {

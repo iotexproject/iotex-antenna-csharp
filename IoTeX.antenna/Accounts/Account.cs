@@ -16,6 +16,10 @@ namespace IoTeX.antenna.Accounts
             Initialise(new EthECKey(privateKey));
         }
         
+        public Account()
+        {
+        }
+        
         public static Account FromPrivateKey(string privateKey)
         { 
             return new Account(privateKey);
@@ -67,6 +71,11 @@ namespace IoTeX.antenna.Accounts
             preambleBytes.CopyTo(message, 0);
             data.CopyTo(message, preambleBytes.Length);
             return Hash.Hash256B(message);
+        }
+
+        public static string PublicKeyToAddress(byte[] publicKey)
+        {
+            return Bech32.Encode("io", Hash.Hash160B(publicKey.Slice(1)));
         }
     }
 }
